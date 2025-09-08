@@ -1,0 +1,83 @@
+{
+  "name": "autoware:universe-devel",
+  "build": {
+    "context": "../..",
+    "dockerfile": "../Dockerfile",
+    "args": {
+      "BASE_IMAGE": "ghcr.io/autowarefoundation/autoware:universe-devel"
+    },
+    "options": [
+      "--network=host"
+    ]
+  },
+  "remoteUser": "autoware",
+  "workspaceMount": "source=${localWorkspaceFolder},target=/workspace,type=bind",
+  "workspaceFolder": "/workspace",
+  "runArgs": [
+    "-it",
+    "--rm",
+    "--name=${localWorkspaceFolderBasename}",
+    "--privileged",
+    "--env",
+    "DISPLAY=${env:DISPLAY}",
+    "--env",
+    "XAUTHORITY=${env:XAUTHORITY}",
+    "--env",
+    "XDG_RUNTIME_DIR=${env:XDG_RUNTIME_DIR}",
+    "--cap-add=SYS_ADMIN",
+    "--cap-add=SYS_PTRACE",
+    "--security-opt",
+    "seccomp=unconfined",
+    "--net=host",
+    "--pid=host",
+    "--volume=/tmp/.X11-unix/:/tmp/.X11-unix",
+    "--volume=/etc/localtime:/etc/localtime:ro",
+    "--volume=/dev/dri:/dev/dri:ro",
+    "--volume=${env:HOME}/autoware_data:/home/autoware/autoware_data",
+    "--volume=${env:HOME}/autoware_map:/home/autoware/autoware_map",
+    "--volume=${env:HOME}/.ssh:/home/autoware/.ssh",
+    "--volume=${env:HOME}/.webauto:/home/autoware/.webauto",
+    "--volume=${env:HOME}/.config/Lichtblick:/home/autoware/.config/Lichtblick"
+  ],
+  "customizations": {
+    "vscode": {
+      "settings.json": {
+        "terminal.integrated.profiles.linux": {
+          "bash": {
+            "path": "/bin/bash"
+          }
+        }
+      },
+      "extensions": [
+        // ROS 2
+        "Ranch-Hand-Robotics.rde-pack",
+        // C++
+        "cschlosser.doxdocgen",
+        "llvm-vs-code-extensions.vscode-clangd",
+        "ms-vscode.cpptools-extension-pack",
+        // CMake
+        "twxs.cmake",
+        // Shell Scripts
+        "timonwong.shellcheck",
+        "foxundermoon.shell-format",
+        // Python
+        "ms-python.autopep8",
+        "ms-python.debugpy",
+        "ms-python.python",
+        "ms-python.vscode-pylance",
+        // Git
+        "eamodio.gitlens",
+        "github.vscode-pull-request-github",
+        // Remote Development
+        "ms-azuretools.vscode-docker",
+        "ms-vscode.remote-explorer",
+        "ms-vscode-remote.vscode-remote-extensionpack",
+        // Extra Tools
+        "redhat.vscode-xml",
+        "redhat.vscode-yaml",
+        "streetsidesoftware.code-spell-checker",
+        "yzhang.markdown-all-in-one"
+      ]
+    }
+  }
+}

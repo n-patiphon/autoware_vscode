@@ -1,0 +1,7 @@
+[Unit]
+Description=Setting up local network multicasting
+[Service]
+ExecStart=/bin/bash -c 'ip link set lo multicast on'
+Restart=no
+[Install]
+WantedBy=multi-user.target
