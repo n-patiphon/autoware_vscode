@@ -83,7 +83,11 @@ Configure your development environment:
 3. Select your Autoware workspace directory and click "Open".
 4. Select devcontainer configuration from the list (`universe-devel-cuda` recommended).
 5. Wait for the container to build.
-6. Start coding!
+6. Build workspace inside container:
+   - `Ctrl+Shift+P` → "Tasks: Run Task" → "Build: Workspace (Release)".
+7. Wait till clangd finishes indexing. If not started, trigger it manually:
+   - `Ctrl+Shift+P` → "clangd: Restart language server.
+8. Start coding!
 
 ## Repository Structure
 
