@@ -36,6 +36,7 @@ RUN curl -sSL https://raw.githubusercontent.com/ros/rosdistro/master/ros.key -o 
   && apt update \
   && DEBIAN_FRONTEND=noninteractive apt install -y --no-install-recommends \
   bash-completion \
+  clang \
   curl \
   gdb \
   gdbserver \
@@ -89,7 +90,8 @@ RUN CLANGD_VERSION=$(curl -fsSL "https://api.github.com/repos/clangd/clangd/rele
   && apt update \
   && DEBIAN_FRONTEND=noninteractive apt install -y --no-install-recommends \
   && wget -O /tmp/clangd-linux.zip "https://github.com/clangd/clangd/releases/download/${CLANGD_VERSION}/clangd-linux-${CLANGD_VERSION}.zip" \
-  && unzip -j /tmp/clangd-linux.zip "clangd_${CLANGD_VERSION}/bin/clangd" -d /usr/local/bin/ \
+  && unzip /tmp/clangd-linux.zip -d /opt/ \
+  && ln -s "/opt/clangd_${CLANGD_VERSION}/bin/clangd" /usr/local/bin/clangd \
   && rm -rf /tmp/clangd-linux.zip \
   && apt autoremove -y && apt clean -y && rm -rf /var/lib/apt/lists/* "$HOME"/.cache
 
