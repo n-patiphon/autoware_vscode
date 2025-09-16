@@ -1,1 +1,24 @@
 devcontainer_json_path: workspace/.devcontainer/universe-devel-cuda/devcontainer.json
+
+vscode_extensions:
+  - Ranch-Hand-Robotics.rde-pack
+  - cschlosser.doxdocgen
+  - llvm-vs-code-extensions.vscode-clangd
+  - ms-vscode.cpptools-extension-pack
+  - nvidia.nsight-vscode-edition
+  - twxs.cmake
+  - timonwong.shellcheck
+  - foxundermoon.shell-format
+  - ms-python.autopep8
+  - ms-python.debugpy
+  - ms-python.python
+  - ms-python.vscode-pylance
+  - eamodio.gitlens
+  - github.vscode-pull-request-github
+  - ms-azuretools.vscode-docker
+  - ms-vscode.remote-explorer
+  - ms-vscode-remote.vscode-remote-extensionpack
+  - redhat.vscode-xml
+  - redhat.vscode-yaml
+  - streetsidesoftware.code-spell-checker
+  - yzhang.markdown-all-in-one
