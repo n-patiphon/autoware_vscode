@@ -19,7 +19,8 @@
   when: nvidia_smi_result.rc == 0
 
 - name: Check if installed driver version meets minimum requirements
-  fail: msg:"Current NVIDIA driver version {{ nvidia_installed_version.stdout }} is less than minimum required version {{ min_nvidia_driver_version }}. Please update your driver.
+  fail:
+    msg: Current NVIDIA driver version {{ nvidia_installed_version.stdout }} is less than minimum required version {{ min_nvidia_driver_version }}. Please update your driver.
   when:
     - nvidia_smi_result.rc == 0
     - nvidia_installed_version.stdout | int < min_nvidia_driver_version | int
