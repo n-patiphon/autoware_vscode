@@ -133,6 +133,9 @@
       "detail": "Pull the latest version of the AWF CSpell configuration.",
       "type": "shell",
       "command": "wget -O .cspell.json https://raw.githubusercontent.com/autowarefoundation/autoware-spell-check-dict/main/.cspell.json && yarn global add https://github.com/tier4/cspell-dicts",
+      "runOptions": {
+        "runOn": "folderOpen"
+      },
       "problemMatcher": []
     }
   ],
