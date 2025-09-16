@@ -1,14 +1,3 @@
-- name: Install git
-  apt:
-    name: git
-    state: present
-  become: true
-  register: git_install_result
-
-- name: Display git installation status
-  debug:
-    msg: "{{ 'Git installed' if git_install_result.changed else 'Git already installed' }}"
-
 - name: Ask to configure git prompt
   pause:
     prompt: Do you want to configure enhanced shell with git prompt? (y/n)
