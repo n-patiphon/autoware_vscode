@@ -63,8 +63,7 @@ docker pull ghcr.io/autowarefoundation/autoware:universe-devel-cuda
    - Select `Build: Workspace (Release)`
    - Wait till the build is complete
 4. Trigger clangd indexing:
-   - Open command palette (`Ctrl+Shift+P`)
-   - Type and select `clangd: Restart language server`
+   - Open any C++ related file in VS Code
    - Wait till the indexing is complete
 5. Start development!
 
