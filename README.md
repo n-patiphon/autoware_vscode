@@ -45,7 +45,7 @@ vcs import src < autoware-nightly.repos
 # Setup your development environment
 cd ~/autoware_vscode && ./setup_workspace.sh ~/autoware
 
-# Pull docker image
+# Pull docker image (you might need to reboot to apply group permissions)
 docker pull ghcr.io/autowarefoundation/autoware:universe-devel-cuda
 ```
 
