@@ -57,9 +57,9 @@
         name: cyclone_dds
       when: cyclone_response.user_input | default('n') | lower == 'y'
 
-    - name: Ask to install Git
+    - name: Ask to configure Git
       pause:
-        prompt: Do you want to install Git? (y/n)
+        prompt: Do you want to configure Git prompt? (y/n)
       register: git_response
 
     - name: Include git role
