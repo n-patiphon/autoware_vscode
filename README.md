@@ -29,6 +29,7 @@ sudo apt purge ansible
 sudo apt -y update && sudo apt -y install pipx
 python3 -m pipx ensurepath
 pipx install --include-deps --force "ansible==6.*"
+pipx ensurepath && source ~/.bashrc
 cd ~/autoware_vscode && ansible-galaxy collection install -f -r "ansible-galaxy-requirements.yaml"
 ansible-playbook autoware_vscode.dev_env.setup_host -K
 ```
