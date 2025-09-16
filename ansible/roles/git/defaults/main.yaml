@@ -1,4 +1,3 @@
----
-bashrc_file: "~/.bashrc"
+bashrc_file: ~/.bashrc
 install_bash_completion: true
 include_host_prefix: true

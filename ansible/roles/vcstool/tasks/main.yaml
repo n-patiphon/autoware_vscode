@@ -1,4 +1,3 @@
----
 - name: Check if curl is installed
   apt:
     name: curl
@@ -15,7 +14,7 @@
 
 - name: Update apt cache
   apt:
-    update_cache: yes
+    update_cache: true
   become: true
   when: repo_added.changed
 

@@ -1,3 +1,1 @@
----
-# Path to devcontainer.json file where extensions are defined
-devcontainer_json_path: "workspace/.devcontainer/universe-devel-cuda/devcontainer.json"
+devcontainer_json_path: workspace/.devcontainer/universe-devel-cuda/devcontainer.json

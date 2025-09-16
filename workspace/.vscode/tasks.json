@@ -1,9 +1,6 @@
 {
-  // See https://go.microsoft.com/fwlink/?LinkId=733558
-  // for the documentation about the tasks.json forma
   "version": "2.0.0",
   "tasks": [
-    // Build tasks
     {
       "label": "Build: Workspace (Release)",
       "detail": "Build workspace with release build type.",
@@ -60,7 +57,6 @@
       "command": "taskset --cpu-list 0-$(($(nproc) / 2 - 1)) colcon build --symlink-install --cmake-args -DCMAKE_BUILD_TYPE=Debug -DCMAKE_EXPORT_COMPILE_COMMANDS=On --packages-above ${input:package}",
       "problemMatcher": ["$gcc", "$nvcc"]
     },
-    // Test tasks
     {
       "label": "Test: All",
       "detail": "Run all unit tests (all packages).",
@@ -75,7 +71,6 @@
       "command": "colcon test-result --delete-yes && colcon test --packages-select ${input:package} --event-handlers console_cohesion+",
       "problemMatcher": ["$gcc", "$nvcc"]
     },
-    // Debug
     {
       "label": "Debug: Prelaunch",
       "detail": "Source workspace and update environment for debugging.",
@@ -91,7 +86,6 @@
       },
       "problemMatcher": []
     },
-    // Clean
     {
       "label": "Clean: Colcon",
       "detail": "Run the clean target",
@@ -106,7 +100,6 @@
       "command": "sudo rm -rf build install log && sudo py3clean .",
       "problemMatcher": []
     },
-    // Workspace editing tasks
     {
       "label": "VCS: Import repositories",
       "detail": "Use vcs to import all repositories from given repos file.",
@@ -128,7 +121,6 @@
       "command": "sudo apt update && rosdep install --from-paths src --ignore-src -yr || (rosdep update && rosdep install --from-paths src --ignore-src -yr)",
       "problemMatcher": []
     },
-    // Pre-commit
     {
       "label": "Pre-commit: Run",
       "detail": "Run pre-commit hooks.",
@@ -136,7 +128,6 @@
       "command": "cd ${input:precommitPath} && taskset --cpu-list 0-$(($(nproc) / 2 - 1)) pre-commit run --all --config .pre-commit-config.yaml",
       "problemMatcher": []
     },
-    // Pull CSpell
     {
       "label": "Pull CSpell dicts",
       "detail": "Pull the latest version of the AWF CSpell configuration.",

@@ -1,7 +1,6 @@
----
 - name: Ask to proceed with VSCode installation
   pause:
-    prompt: "Do you want to install Visual Studio Code and extensions? (y/n)"
+    prompt: Do you want to install Visual Studio Code and extensions? (y/n)
   register: vscode_install_response
 
 - name: Set VSCode installation flag
@@ -57,7 +56,7 @@
 
 - name: Update apt cache
   apt:
-    update_cache: yes
+    update_cache: true
   become: true
   when: proceed_with_vscode_install
 

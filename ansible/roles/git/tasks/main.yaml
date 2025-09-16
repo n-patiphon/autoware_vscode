@@ -1,4 +1,3 @@
----
 - name: Install git
   apt:
     name: git
@@ -12,7 +11,7 @@
 
 - name: Ask to configure git prompt
   pause:
-    prompt: "Do you want to configure enhanced shell with git prompt? (y/n)"
+    prompt: Do you want to configure enhanced shell with git prompt? (y/n)
   register: git_response
 
 - name: Set git prompt installation flag
@@ -21,7 +20,7 @@
 
 - name: Ask about host prefix
   pause:
-    prompt: "Do you want to include (host) prefix in your prompt? (y/n)"
+    prompt: Do you want to include (host) prefix in your prompt? (y/n)
   register: host_prefix_response
   when: install_git
 
@@ -82,5 +81,5 @@
 
 - name: Remind user to reload shell
   debug:
-    msg: "Git prompt configuration added. Remember to restart your terminal or run 'source ~/.bashrc' to apply changes."
+    msg: Git prompt configuration added. Remember to restart your terminal or run 'source ~/.bashrc' to apply changes.
   when: install_git

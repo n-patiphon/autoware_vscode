@@ -85,12 +85,6 @@
       ],
       "preLaunchTask": "Debug: Prelaunch"
     },
-    /*
-      Example launch commands:
-      ros2 launch package_name launch_name --launch-prefix 'gdbserver localhost:4242' --launch-prefix-filter your_executable
-      ros2 launch package_name launch_name --launch-prefix 'gdbserver localhost:4242' --launch-prefix-filter component_container_mt
-      ros2 launch package_name launch_name --launch-prefix 'cuda-gdbserver localhost:4242' --launch-prefix-filter component_container
-    */
     {
       "name": "Launch gdb with server",
       "type": "cppdbg",

@@ -1,7 +1,6 @@
----
 - name: Ask to install multicasting service
   pause:
-    prompt: "Do you want to install the multicasting service? (y/n)"
+    prompt: Do you want to install the multicasting service? (y/n)
   register: multicast_response
 
 - name: Set multicasting installation flag
@@ -20,16 +19,16 @@
 
 - name: Ask to enable the multicasting service
   pause:
-    prompt: "Do you want to enable the multicasting service? (y/n)"
+    prompt: Do you want to enable the multicasting service? (y/n)
   register: enable_response
   when: install_multicasting and enable_service
 
 - name: Enable and start multicasting service
   systemd:
     name: multicasting
-    enabled: yes
+    enabled: true
     state: started
-    daemon_reload: yes
+    daemon_reload: true
   become: true
   when: install_multicasting and enable_response.user_input | default('n') | lower == 'y'
 
@@ -41,5 +40,5 @@
 
 - name: Display success message
   debug:
-    msg: "Multicasting service installed and configured"
+    msg: Multicasting service installed and configured
   when: install_multicasting

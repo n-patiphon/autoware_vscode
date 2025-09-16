@@ -2,9 +2,7 @@
 
 This document explains how to use terminal multiplexers like tmux and zellij for managing terminal sessions in your Autoware development workflow. Which one to choose depends on your personal preference; both are powerful tools. Tmux is more widely used and has been around longer, while Zellij offers a more modern experience with additional features.
 
-# Tmux Guide
-
-## Basic Tmux Commands
+## Tmux Guide
 
 ### Starting Tmux
 
@@ -46,9 +44,9 @@ tmux attach -t session_name
 tmux kill-session -t session_name
 ```
 
-## Example Autoware Workflow with Tmux
+### Example Autoware Workflow with Tmux
 
-### Setting Up a Development Layout
+#### Setting Up a Development Layout
 
 1. Run VS Code with Dev Containers to activate container environment.
 
@@ -69,7 +67,7 @@ tmux kill-session -t session_name
    - `./.devcontainer/enter.sh`
    - `Ctrl+b` then `Ctrl+x` to disable broadcasting
 
-### Example Development Session
+#### Example Development Session
 
 1. Start tmux with a new session name:
 
@@ -90,9 +88,9 @@ tmux kill-session -t session_name
    - `./.devcontainer/enter.sh`
    - `Ctrl+b` then `Ctrl+x` (disable broadcasting)
 
-## Advanced Tmux Features
+### Advanced Tmux Features
 
-### Copying
+#### Copying
 
 1. Enter copy mode:
    - `Ctrl+b` then `[`
@@ -101,21 +99,19 @@ tmux kill-session -t session_name
 4. Highlight the text you want to copy
 5. Press `y` to copy to clipboard
 
-### Nested Tmux Sessions
+#### Nested Tmux Sessions
 
 When using tmux on a remote server that also has tmux:
 
 1. Use `Ctrl+b` then `b` to send commands to the inner session
 2. For example: `Ctrl+b` then `b` then `c` creates a new window in the inner session
 
-## Additional Resources
+### Additional Resources
 
 - [Tmux Cheat Sheet](https://tmuxcheatsheet.com/)
 - [Tmux Getting Started](https://github.com/tmux/tmux/wiki/Getting-Started)
 
-# Zellij Guide
-
-## Basic Zellij Commands
+## Zellij Guide
 
 ### Starting Zellij
 
@@ -161,7 +157,7 @@ zellij attach my_session
 zellij kill-session my_session
 ```
 
-## Example Autoware Workflow with Zellij
+### Example Autoware Workflow with Zellij
 
 1. Start a new named session:
 
@@ -179,7 +175,7 @@ zellij kill-session my_session
    - `./.devcontainer/enter.sh`
    - `Ctrl+t` then `s` to disable synchronization
 
-## Additional Resources
+### Additional Resources
 
 - [Zellij Documentation](https://zellij.dev/documentation/)
 - [Zellij GitHub Repository](https://github.com/zellij-org/zellij)

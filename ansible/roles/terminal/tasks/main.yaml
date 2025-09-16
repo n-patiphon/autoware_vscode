@@ -1,7 +1,6 @@
----
 - name: Ask which terminal multiplexers to install
   pause:
-    prompt: "Do you want to install tmux? (y/n)"
+    prompt: Do you want to install tmux? (y/n)
   register: tmux_response
   when: ask_for_terminal_multiplexers
 
@@ -12,7 +11,7 @@
 
 - name: Ask for zellij installation
   pause:
-    prompt: "Do you want to install zellij? (y/n)"
+    prompt: Do you want to install zellij? (y/n)
   register: zellij_response
   when: ask_for_terminal_multiplexers
 
@@ -23,7 +22,7 @@
 
 - name: Ask for tmux config copy
   pause:
-    prompt: "Do you want to copy tmux configuration? (y/n)"
+    prompt: Do you want to copy tmux configuration? (y/n)
   register: tmux_config_response
   when: install_tmux
 
@@ -64,7 +63,7 @@
   unarchive:
     src: "{{ zellij_temp_dir.path }}/zellij.tar.gz"
     dest: "{{ zellij_temp_dir.path }}"
-    remote_src: yes
+    remote_src: true
   when: install_zellij
 
 - name: Install zellij
@@ -72,7 +71,7 @@
     src: "{{ zellij_temp_dir.path }}/zellij"
     dest: "{{ zellij_install_dir }}/zellij"
     mode: "0755"
-    remote_src: yes
+    remote_src: true
   become: true
   when: install_zellij
 

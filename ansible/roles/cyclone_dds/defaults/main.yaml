@@ -1,3 +1,2 @@
----
-sysctl_conf_path: "/etc/sysctl.d/10-cyclone-max.conf"
+sysctl_conf_path: /etc/sysctl.d/10-cyclone-max.conf
 apply_sysctl_immediately: true

@@ -1,7 +1,6 @@
----
 - name: Ask to install CycloneDDS system configuration
   pause:
-    prompt: "Do you want to install CycloneDDS system configuration? (y/n)"
+    prompt: Do you want to install CycloneDDS system configuration? (y/n)
   register: cyclone_response
 
 - name: Set CycloneDDS installation flag
@@ -20,7 +19,7 @@
 
 - name: Ask to apply CycloneDDS settings immediately
   pause:
-    prompt: "Do you want to apply CycloneDDS settings immediately? (y/n)"
+    prompt: Do you want to apply CycloneDDS settings immediately? (y/n)
   register: apply_now_response
   when: install_cyclone_config and apply_sysctl_immediately
 
@@ -31,5 +30,5 @@
 
 - name: Display success message
   debug:
-    msg: "CycloneDDS system configuration successfully installed"
+    msg: CycloneDDS system configuration successfully installed
   when: install_cyclone_config

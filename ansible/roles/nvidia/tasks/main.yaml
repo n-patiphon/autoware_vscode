@@ -1,4 +1,3 @@
----
 - name: Check if NVIDIA driver is installed
   command: nvidia-smi
   register: nvidia_smi_result
@@ -20,15 +19,14 @@
   when: nvidia_smi_result.rc == 0
 
 - name: Check if installed driver version meets minimum requirements
-  fail:
-    msg: "Current NVIDIA driver version {{ nvidia_installed_version.stdout }} is less than minimum required version {{ min_nvidia_driver_version }}. Please update your driver."
+  fail: msg:"Current NVIDIA driver version {{ nvidia_installed_version.stdout }} is less than minimum required version {{ min_nvidia_driver_version }}. Please update your driver.
   when:
     - nvidia_smi_result.rc == 0
     - nvidia_installed_version.stdout | int < min_nvidia_driver_version | int
 
 - name: Notify that installed driver meets minimum requirements
   debug:
-    msg: "Current NVIDIA driver version {{ nvidia_installed_version.stdout }} meets minimum requirements ({{ min_nvidia_driver_version }})."
+    msg: Current NVIDIA driver version {{ nvidia_installed_version.stdout }} meets minimum requirements ({{ min_nvidia_driver_version }}).
   when:
     - nvidia_smi_result.rc == 0
     - nvidia_installed_version.stdout | int >= min_nvidia_driver_version | int
@@ -40,7 +38,7 @@
 
 - name: Ask to proceed with NVIDIA driver installation (only if interactive mode)
   pause:
-    prompt: "No NVIDIA driver detected. Do you want to install NVIDIA driver version {{ nvidia_driver_version }}? (y/n)"
+    prompt: No NVIDIA driver detected. Do you want to install NVIDIA driver version {{ nvidia_driver_version }}? (y/n)
   register: driver_install_response
   when:
     - nvidia_smi_result.rc != 0
@@ -55,7 +53,7 @@
 
 - name: Update apt cache
   apt:
-    update_cache: yes
+    update_cache: true
   become: true
   when: nvidia_smi_result.rc != 0 and proceed_with_driver_install
 
@@ -78,18 +76,18 @@
 
 - name: Update apt cache after adding repository
   apt:
-    update_cache: yes
+    update_cache: true
   become: true
   when: nvidia_smi_result.rc != 0 and proceed_with_driver_install
 
 - name: Install NVIDIA driver
   apt:
-    name: "nvidia-driver-{{ nvidia_driver_version }}"
+    name: nvidia-driver-{{ nvidia_driver_version }}
     state: present
   become: true
   when: nvidia_smi_result.rc != 0 and proceed_with_driver_install
 
 - name: Display installation completion message
   debug:
-    msg: "NVIDIA driver installation completed. A system reboot is recommended."
+    msg: NVIDIA driver installation completed. A system reboot is recommended.
   when: nvidia_smi_result.rc != 0 and proceed_with_driver_install
