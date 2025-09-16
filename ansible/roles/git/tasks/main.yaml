@@ -1,22 +1,11 @@
-- name: Ask to configure git prompt
-  pause:
-    prompt: Do you want to configure enhanced shell with git prompt? (y/n)
-  register: git_response
-
-- name: Set git prompt installation flag
-  set_fact:
-    install_git: "{{ git_response.user_input | default('n') | lower == 'y' }}"
-
 - name: Ask about host prefix
   pause:
     prompt: Do you want to include (host) prefix in your prompt? (y/n)
   register: host_prefix_response
-  when: install_git
 
 - name: Set host prefix flag
   set_fact:
     include_host_prefix: "{{ host_prefix_response.user_input | default('n') | lower == 'y' }}"
-  when: install_git
 
 - name: Install bash completion
   apt:
@@ -24,19 +13,16 @@
     state: present
   become: true
   register: bash_completion_result
-  when: install_git and install_bash_completion
 
 - name: Display installation status
   debug:
     msg: "{{ 'Bash completion installed' if bash_completion_result.changed else 'Bash completion already installed' }}"
-  when: install_git and install_bash_completion
 
 - name: Check if git configuration exists in bashrc
   shell: grep -q "GIT_PS1_SHOWDIRTYSTATE" "{{ bashrc_file | expanduser }}" || echo "not found"
   register: git_config_in_bashrc
   changed_when: false
   failed_when: false
-  when: install_git
 
 - name: Add git prompt configuration to bashrc with host prefix
   blockinfile:
@@ -51,7 +37,7 @@
       export GIT_PS1_SHOWCOLORHINTS=1
       PRE='\[\033[01;31m\](host) \[\033[01;32m\]\u@\h\[\033[00m\]:\[\033[01;34m\]\w\[\033[00m\]'
       export PROMPT_COMMAND="__git_ps1 '${VIRTUAL_ENV:+($(basename "$VIRTUAL_ENV")) }$PRE' '$ '"
-  when: install_git and git_config_in_bashrc.stdout == "not found" and include_host_prefix
+  when: git_config_in_bashrc.stdout == "not found" and include_host_prefix
 
 - name: Add git prompt configuration to bashrc without host prefix
   blockinfile:
@@ -66,9 +52,8 @@
       export GIT_PS1_SHOWCOLORHINTS=1
       PRE='\[\033[01;32m\]\u@\h\[\033[00m\]:\[\033[01;34m\]\w\[\033[00m\]'
       export PROMPT_COMMAND="__git_ps1 '${VIRTUAL_ENV:+($(basename "$VIRTUAL_ENV")) }$PRE' '$ '"
-  when: install_git and git_config_in_bashrc.stdout == "not found" and not include_host_prefix
+  when: git_config_in_bashrc.stdout == "not found" and not include_host_prefix
 
 - name: Remind user to reload shell
   debug:
     msg: Git prompt configuration added. Remember to restart your terminal or run 'source ~/.bashrc' to apply changes.
-  when: install_git
