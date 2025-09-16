@@ -1,0 +1,45 @@
+---
+- name: Ask to install multicasting service
+  pause:
+    prompt: "Do you want to install the multicasting service? (y/n)"
+  register: multicast_response
+
+- name: Set multicasting installation flag
+  set_fact:
+    install_multicasting: "{{ multicast_response.user_input | default('n') | lower == 'y' }}"
+
+- name: Copy multicasting service file
+  copy:
+    src: multicasting.service
+    dest: "{{ service_file_path }}"
+    owner: root
+    group: root
+    mode: '0644'
+  become: true
+  when: install_multicasting
+
+- name: Ask to enable the multicasting service
+  pause:
+    prompt: "Do you want to enable the multicasting service? (y/n)"
+  register: enable_response
+  when: install_multicasting and enable_service
+
+- name: Enable and start multicasting service
+  systemd:
+    name: multicasting
+    enabled: yes
+    state: started
+    daemon_reload: yes
+  become: true
+  when: install_multicasting and enable_response.user_input | default('n') | lower == 'y'
+
+- name: Manually enable multicasting for current session
+  command: ip link set lo multicast on
+  become: true
+  when: install_multicasting
+  changed_when: true
+
+- name: Display success message
+  debug:
+    msg: "Multicasting service installed and configured"
+  when: install_multicasting

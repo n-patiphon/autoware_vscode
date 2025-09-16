@@ -22,12 +22,6 @@
     "DISPLAY=${env:DISPLAY}",
     "--env",
     "XAUTHORITY=${env:XAUTHORITY}",
-    "--env",
-    "XDG_RUNTIME_DIR=${env:XDG_RUNTIME_DIR}",
-    "--cap-add=SYS_ADMIN",
-    "--cap-add=SYS_PTRACE",
-    "--security-opt",
-    "seccomp=unconfined",
     "--net=host",
     "--pid=host",
     "--volume=/tmp/.X11-unix/:/tmp/.X11-unix",
@@ -37,7 +31,8 @@
     "--volume=${env:HOME}/autoware_map:/home/autoware/autoware_map",
     "--volume=${env:HOME}/.ssh:/home/autoware/.ssh",
     "--volume=${env:HOME}/.webauto:/home/autoware/.webauto",
-    "--volume=${env:HOME}/.config/Lichtblick:/home/autoware/.config/Lichtblick"
+    "--volume=${env:HOME}/.config/Lichtblick:/home/autoware/.config/Lichtblick",
+    "--volume=${env:HOME}/.ccache:/ccache"
   ],
   "customizations": {
     "vscode": {

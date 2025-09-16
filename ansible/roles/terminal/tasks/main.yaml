@@ -1,0 +1,83 @@
+---
+- name: Ask which terminal multiplexers to install
+  pause:
+    prompt: "Do you want to install tmux? (y/n)"
+  register: tmux_response
+  when: ask_for_terminal_multiplexers
+
+- name: Set tmux installation flag
+  set_fact:
+    install_tmux: "{{ tmux_response.user_input | default('n') | lower == 'y' }}"
+  when: ask_for_terminal_multiplexers
+
+- name: Ask for zellij installation
+  pause:
+    prompt: "Do you want to install zellij? (y/n)"
+  register: zellij_response
+  when: ask_for_terminal_multiplexers
+
+- name: Set zellij installation flag
+  set_fact:
+    install_zellij: "{{ zellij_response.user_input | default('n') | lower == 'y' }}"
+  when: ask_for_terminal_multiplexers
+
+- name: Ask for tmux config copy
+  pause:
+    prompt: "Do you want to copy tmux configuration? (y/n)"
+  register: tmux_config_response
+  when: install_tmux
+
+- name: Set tmux config copy flag
+  set_fact:
+    copy_tmux_config: "{{ tmux_config_response.user_input | default('n') | lower == 'y' }}"
+  when: install_tmux
+
+- name: Install tmux
+  apt:
+    name: tmux
+    state: present
+  become: true
+  when: install_tmux
+
+- name: Copy tmux configuration
+  copy:
+    src: "{{ tmux_config_source }}"
+    dest: "{{ tmux_config_dest | expanduser }}"
+    mode: '0644'
+  when: install_tmux and copy_tmux_config
+
+- name: Create temporary directory for zellij
+  tempfile:
+    state: directory
+    suffix: zellij
+  register: zellij_temp_dir
+  when: install_zellij
+
+- name: Download zellij
+  get_url:
+    url: "{{ zellij_download_url }}"
+    dest: "{{ zellij_temp_dir.path }}/zellij.tar.gz"
+    mode: '0644'
+  when: install_zellij
+
+- name: Extract zellij
+  unarchive:
+    src: "{{ zellij_temp_dir.path }}/zellij.tar.gz"
+    dest: "{{ zellij_temp_dir.path }}"
+    remote_src: yes
+  when: install_zellij
+
+- name: Install zellij
+  copy:
+    src: "{{ zellij_temp_dir.path }}/zellij"
+    dest: "{{ zellij_install_dir }}/zellij"
+    mode: '0755'
+    remote_src: yes
+  become: true
+  when: install_zellij
+
+- name: Clean up temporary directory
+  file:
+    path: "{{ zellij_temp_dir.path }}"
+    state: absent
+  when: install_zellij and zellij_temp_dir.path is defined

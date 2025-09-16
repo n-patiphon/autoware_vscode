@@ -1,0 +1,35 @@
+---
+- name: Ask to install CycloneDDS system configuration
+  pause:
+    prompt: "Do you want to install CycloneDDS system configuration? (y/n)"
+  register: cyclone_response
+
+- name: Set CycloneDDS installation flag
+  set_fact:
+    install_cyclone_config: "{{ cyclone_response.user_input | default('n') | lower == 'y' }}"
+
+- name: Copy CycloneDDS sysctl configuration
+  copy:
+    src: 10-cyclone-max.conf
+    dest: "{{ sysctl_conf_path }}"
+    owner: root
+    group: root
+    mode: '0644'
+  become: true
+  when: install_cyclone_config
+
+- name: Ask to apply CycloneDDS settings immediately
+  pause:
+    prompt: "Do you want to apply CycloneDDS settings immediately? (y/n)"
+  register: apply_now_response
+  when: install_cyclone_config and apply_sysctl_immediately
+
+- name: Apply sysctl settings
+  command: sysctl -p "{{ sysctl_conf_path }}"
+  become: true
+  when: install_cyclone_config and apply_now_response.user_input | default('n') | lower == 'y'
+
+- name: Display success message
+  debug:
+    msg: "CycloneDDS system configuration successfully installed"
+  when: install_cyclone_config

@@ -1,0 +1,80 @@
+---
+- name: Ask to proceed with VSCode installation
+  pause:
+    prompt: "Do you want to install Visual Studio Code and extensions? (y/n)"
+  register: vscode_install_response
+
+- name: Set VSCode installation flag
+  set_fact:
+    proceed_with_vscode_install: "{{ vscode_install_response.user_input | default('n') | lower == 'y' }}"
+
+- name: Check if devcontainer.json exists
+  stat:
+    path: "{{ playbook_dir }}/../{{ devcontainer_json_path }}"
+  register: devcontainer_file
+  when: proceed_with_vscode_install
+
+- name: Read devcontainer.json file
+  slurp:
+    src: "{{ playbook_dir }}/../{{ devcontainer_json_path }}"
+  register: devcontainer_content
+  when: proceed_with_vscode_install and devcontainer_file.stat.exists
+
+- name: Parse JSON content
+  set_fact:
+    devcontainer_json: "{{ devcontainer_content.content | b64decode | from_json }}"
+  when: proceed_with_vscode_install and devcontainer_file.stat.exists and devcontainer_content is defined
+
+- name: Extract extensions from JSON
+  set_fact:
+    vscode_extensions: "{{ devcontainer_json.customizations.vscode.extensions }}"
+  when: proceed_with_vscode_install and devcontainer_json is defined and devcontainer_json.customizations is defined
+
+- name: Install prerequisites
+  apt:
+    name:
+      - apt-transport-https
+      - wget
+      - gpg
+    state: present
+  become: true
+  when: proceed_with_vscode_install
+
+- name: Add Microsoft GPG key
+  apt_key:
+    url: https://packages.microsoft.com/keys/microsoft.asc
+    state: present
+  become: true
+  when: proceed_with_vscode_install
+
+- name: Add VSCode repository
+  apt_repository:
+    repo: deb [arch=amd64] https://packages.microsoft.com/repos/vscode stable main
+    state: present
+    filename: vscode
+  become: true
+  when: proceed_with_vscode_install
+
+- name: Update apt cache
+  apt:
+    update_cache: yes
+  become: true
+  when: proceed_with_vscode_install
+
+- name: Install Visual Studio Code
+  apt:
+    name: code
+    state: present
+  become: true
+  when: proceed_with_vscode_install
+
+- name: Install VSCode extensions
+  command: code --install-extension {{ item }} --force
+  with_items: "{{ vscode_extensions }}"
+  register: vscode_result
+  changed_when: "'already installed' not in vscode_result.stdout"
+  failed_when: 
+    - vscode_result.rc != 0
+    - "'already installed' not in vscode_result.stdout"
+  ignore_errors: true
+  when: proceed_with_vscode_install and vscode_extensions | length > 0

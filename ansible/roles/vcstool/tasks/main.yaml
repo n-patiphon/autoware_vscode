@@ -1,0 +1,32 @@
+---
+- name: Check if curl is installed
+  apt:
+    name: curl
+    state: present
+  become: true
+
+- name: Add vcstool repository
+  shell: curl -s https://packagecloud.io/install/repositories/dirk-thomas/vcstool/script.deb.sh | bash
+  args:
+    creates: /etc/apt/sources.list.d/dirk-thomas_vcstool.list
+  become: true
+  register: repo_added
+  changed_when: repo_added.rc == 0
+
+- name: Update apt cache
+  apt:
+    update_cache: yes
+  become: true
+  when: repo_added.changed
+
+- name: Install vcstool
+  apt:
+    name: python3-vcstool
+    state: present
+  become: true
+
+- name: Verify vcstool installation
+  command: vcs --version
+  register: vcs_version
+  changed_when: false
+  failed_when: vcs_version.rc != 0

@@ -2,6 +2,9 @@
 ARG BASE_IMAGE
 FROM $BASE_IMAGE
 
+# Default ccache max size
+ARG CCACHE_MAXSIZE="30G"
+
 # Metadata - should come early after FROM
 LABEL maintainer="The Autoware Foundation" \
       description="Autoware development container with enhanced tooling" \
@@ -16,7 +19,11 @@ ENV SHELL=/bin/bash
 ENV CYCLONEDDS_URI=file:///workspace/.devcontainer/cyclonedds_config.xml \
     PYTHONPATH=/home/autoware/.local/bin \
     RCUTILS_COLORIZED_OUTPUT=1 \
-    RCUTILS_CONSOLE_OUTPUT_FORMAT="[{severity} {time}] [{name}]: {message} ({function_name}() at {file_name}:{line_number})"
+    RCUTILS_CONSOLE_OUTPUT_FORMAT="[{severity} {time}] [{name}]: {message} ({function_name}() at {file_name}:{line_number})" \
+    CCACHE_DIR=/ccache \
+    CC=/usr/lib/ccache/gcc \
+    CXX=/usr/lib/ccache/g++ \
+    CCACHE_MAXSIZE=${CCACHE_MAXSIZE}
 
 # Git prompt customization
 ENV GIT_PS1_SHOWDIRTYSTATE=1 \
@@ -36,10 +43,12 @@ RUN curl -sSL https://raw.githubusercontent.com/ros/rosdistro/master/ros.key -o 
   && apt update \
   && DEBIAN_FRONTEND=noninteractive apt install -y --no-install-recommends \
   bash-completion \
+  ccache \
   clang \
   curl \
   gdb \
   gdbserver \
+  gh \
   htop \
   jq \
   kcachegrind \
@@ -57,7 +66,6 @@ RUN curl -sSL https://raw.githubusercontent.com/ros/rosdistro/master/ros.key -o 
 RUN python3 -m pip install --no-cache-dir --root / \
   check-jsonschema \
   pydot \
-  rtui-app \
   transforms3d==0.4.2
 
 # Install CSpell
@@ -88,7 +96,6 @@ RUN LICHTBLICK_VERSION=$(curl -fsSL "https://api.github.com/repos/lichtblick-sui
 RUN CLANGD_VERSION=$(curl -fsSL "https://api.github.com/repos/clangd/clangd/releases/latest" | jq -r '.tag_name') \
   && echo "Installing clangd version: $CLANGD_VERSION" \
   && apt update \
-  && DEBIAN_FRONTEND=noninteractive apt install -y --no-install-recommends \
   && wget -O /tmp/clangd-linux.zip "https://github.com/clangd/clangd/releases/download/${CLANGD_VERSION}/clangd-linux-${CLANGD_VERSION}.zip" \
   && unzip /tmp/clangd-linux.zip -d /opt/ \
   && ln -s "/opt/clangd_${CLANGD_VERSION}/bin/clangd" /usr/local/bin/clangd \
@@ -99,13 +106,19 @@ RUN CLANGD_VERSION=$(curl -fsSL "https://api.github.com/repos/clangd/clangd/rele
 ARG USERNAME=autoware
 ARG USER_UID=1000
 ARG USER_GID=$USER_UID
+ENV XDG_RUNTIME_DIR=/tmp/xdg/$USER_UID
 
 RUN groupadd --gid $USER_GID $USERNAME \
   && useradd --uid $USER_UID --gid $USER_GID -m $USERNAME \
   && echo $USERNAME ALL=\(root\) NOPASSWD:ALL > /etc/sudoers.d/$USERNAME \
   && chmod 0440 /etc/sudoers.d/$USERNAME \
   && mkdir /home/$USERNAME/.config \
-  && chown -R $USERNAME:$USERNAME /home/$USERNAME/.config
+  && mkdir -p /ccache \
+  && chown -R $USERNAME:$USERNAME /home/$USERNAME/.config \
+  && chown -R $USERNAME:$USERNAME /ccache \
+  && mkdir -p $XDG_RUNTIME_DIR \
+  && chmod 700 "$XDG_RUNTIME_DIR" \
+  && chown -R $USERNAME:$USERNAME "$XDG_RUNTIME_DIR"
 
 # Install missing dependencies of current workspace
 COPY src/ /tmp/src
@@ -123,6 +136,10 @@ RUN set +e \
 # Final user and workspace setup
 USER $USERNAME
 WORKDIR /workspace
+
+# Setup ccache configuration
+RUN ccache --max-size="${CCACHE_MAXSIZE}" \
+  && echo 'export PATH="/usr/lib/ccache:$PATH"' >> /home/$USERNAME/.bashrc
 
 # Health check
 HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \

@@ -1,0 +1,113 @@
+---
+- name: Setup Autoware Development Environment
+  hosts: localhost
+  become: false
+  
+  tasks:
+    - name: Introduction
+      debug:
+        msg: "This playbook will set up the Autoware development environment. You will be prompted before each step."
+
+    - name: Ask to install Docker Engine
+      pause:
+        prompt: "Do you want to install Docker Engine? (y/n)"
+      register: docker_response
+
+    - name: Include docker_engine role
+      include_role:
+        name: docker_engine
+      when: docker_response.user_input | default('n') | lower == 'y'
+
+    - name: Ask to install NVIDIA drivers
+      pause:
+        prompt: "Do you want to check and install NVIDIA drivers? (y/n)"
+      register: nvidia_response
+
+    - name: Include nvidia role
+      include_role:
+        name: nvidia
+      when: nvidia_response.user_input | default('n') | lower == 'y'
+
+    - name: Ask to install NVIDIA Container Toolkit
+      pause:
+        prompt: "Do you want to install NVIDIA Container Toolkit? (y/n)"
+      register: toolkit_response
+
+    - name: Include nvidia_container_toolkit role
+      include_role:
+        name: nvidia_container_toolkit
+      when: toolkit_response.user_input | default('n') | lower == 'y'
+
+    - name: Ask to configure multicasting
+      pause:
+        prompt: "Do you want to configure multicasting for ROS 2? (y/n)"
+      register: multicasting_response
+
+    - name: Include multicasting role
+      include_role:
+        name: multicasting
+      when: multicasting_response.user_input | default('n') | lower == 'y'
+
+    - name: Ask to configure CycloneDDS
+      pause:
+        prompt: "Do you want to configure CycloneDDS for ROS 2? (y/n)"
+      register: cyclone_response
+
+    - name: Include cyclone_dds role
+      include_role:
+        name: cyclone_dds
+      when: cyclone_response.user_input | default('n') | lower == 'y'
+
+    - name: Ask to install Git
+      pause:
+        prompt: "Do you want to install Git? (y/n)"
+      register: git_response
+
+    - name: Include git role
+      include_role:
+        name: git
+      when: git_response.user_input | default('n') | lower == 'y'
+
+    - name: Ask to install vcstool
+      pause:
+        prompt: "Do you want to install vcstool (version control tool for multiple repositories)? (y/n)"
+      register: vcstool_response
+
+    - name: Include vcstool role
+      include_role:
+        name: vcstool
+      when: vcstool_response.user_input | default('n') | lower == 'y'
+
+    - name: Ask to install terminal multiplexers
+      pause:
+        prompt: "Do you want to install terminal multiplexers (tmux/zellij)? (y/n)"
+      register: terminal_response
+
+    - name: Include terminal role
+      include_role:
+        name: terminal
+      when: terminal_response.user_input | default('n') | lower == 'y'
+
+    - name: Ask to install VS Code
+      pause:
+        prompt: "Do you want to install VS Code and extensions? (y/n)"
+      register: vscode_response
+
+    - name: Include vscode role
+      include_role:
+        name: vscode
+      when: vscode_response.user_input | default('n') | lower == 'y'
+
+    - name: Ask to download artifacts
+      pause:
+        prompt: "Do you want to download Autoware artifacts? (y/n)"
+      register: artifacts_response
+
+    - name: Include artifacts role
+      include_role:
+        name: artifacts
+      when: artifacts_response.user_input | default('n') | lower == 'y'
+
+    - name: Setup completed
+      debug:
+        msg: "Autoware development environment setup completed. You may need to reboot your system for NVIDIA driver changes to take effect."

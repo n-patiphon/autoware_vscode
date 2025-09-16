@@ -1,0 +1,22 @@
+# Required
+namespace: autoware_vscode
+name: dev_env
+version: 0.1.0
+readme: README.md
+authors:
+  - Amadeusz Szymko <amadeusz.szymko.2@tier4.jp>
+
+# Optional
+description: Set up development Dev Containers environment for Autoware-related projects.
+license:
+  - Apache-2.0
+tags:
+  - autoware
+  - devcontainer
+  - vscode
+dependencies: {}
+repository: https://github.com/amadeuszsz/autoware_vscode
+documentation: https://autowarefoundation.github.io/autoware-documentation
+homepage: https://www.autoware.org/
+issues: https://github.com/amadeuszsz/autoware_vscode/issues
+build_ignore: []
