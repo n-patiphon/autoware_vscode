@@ -136,7 +136,9 @@ backup_workspace_config() {
         print_success "Moved to: $backup_dir"
         return 0
     fi
-    return 1
+    # Directory doesn't exist - nothing to backup
+    print_info "No existing $config_name found in workspace, skipping backup"
+    return 0
 }
 
 # Function to check if dependencies are installed
@@ -203,11 +205,15 @@ else
     # Ask for workspace path
     echo ""
     echo -e "${YELLOW}Enter the path to your Autoware workspace:${NC}"
-    echo -e "${BLUE}(default: ~/autoware):${NC} \c"
+    echo -e "${BLUE}:${NC} \c"
     read -r workspace_path
 
-    # Set default workspace path
-    workspace_path=${workspace_path:-~/autoware}
+    # Check if the workspace path is empty
+    if [[ -z $workspace_path ]]; then
+        print_error "No workspace path provided."
+        print_error "Please provide a path to your Autoware workspace."
+        exit 1
+    fi
 fi
 
 # Expand tilde if present
@@ -252,21 +258,34 @@ if ask_question "Do you want to copy VS Code and Dev Containers configuration to
     if [[ -d $data_dir ]]; then
         print_info "Copying workspace configuration files..."
 
-        # Copy .vscode directory if it exists
+        # Track if we successfully copied any configuration
+        config_copied=false
+
+        # Copy .vscode directory if it exists in the data directory
         if [[ -d "$data_dir/.vscode" ]]; then
             backup_workspace_config "$workspace_path/.vscode" ".vscode"
             cp -r "$data_dir/.vscode" "$workspace_path/"
             print_success "VS Code configuration copied to workspace"
+            config_copied=true
+        else
+            print_warning "VS Code configuration not found in $data_dir"
         fi
 
-        # Copy .devcontainer directory if it exists
+        # Copy .devcontainer directory if it exists in the data directory
         if [[ -d "$data_dir/.devcontainer" ]]; then
             backup_workspace_config "$workspace_path/.devcontainer" ".devcontainer"
             cp -r "$data_dir/.devcontainer" "$workspace_path/"
             print_success "Devcontainer configuration copied to workspace"
+            config_copied=true
+        else
+            print_warning "Devcontainer configuration not found in $data_dir"
         fi
 
-        print_success "Workspace configuration files installed"
+        if [[ $config_copied == true ]]; then
+            print_success "Workspace configuration files installed"
+        else
+            print_warning "No configuration files were found to copy"
+        fi
     else
         print_warning "Configuration data directory not found: $data_dir"
         print_info "Skipping workspace configuration copy"
