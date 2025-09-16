@@ -102,6 +102,11 @@
         prompt: Do you want to download Autoware artifacts? (y/n)
       register: artifacts_response
 
+    - name: Set data_dir variable
+      set_fact:
+        data_dir: "{{ ansible_env.HOME }}/autoware_data"
+      when: artifacts_response.user_input | default('n') | lower == 'y'
+
     - name: Include artifacts role
       include_role:
         name: artifacts
