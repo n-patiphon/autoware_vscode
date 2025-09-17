@@ -17,7 +17,7 @@ This repository provides a complete development environment for Autoware project
 - **Ubuntu 22.04** operating system
 - **NVIDIA GPU** for CUDA support
 
-### 2. Setup Your Environment
+### 2. Host Setup
 
 ```bash
 # Clone this repository
@@ -34,7 +34,7 @@ cd ~/autoware_vscode && ansible-galaxy collection install -f -r "ansible-galaxy-
 ansible-playbook autoware_vscode.dev_env.setup_host -K
 ```
 
-### 3. Setup any Autoware-based project
+### 3. Workspace Setup
 
 ```bash
 git clone https://github.com/autowarefoundation/autoware.git ~/autoware
