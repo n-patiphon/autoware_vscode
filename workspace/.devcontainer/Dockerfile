@@ -144,6 +144,15 @@ WORKDIR /workspace
 RUN ccache --max-size="${CCACHE_MAXSIZE}" \
   && echo "export PATH=\"/usr/lib/ccache:\$PATH\"" >> "/home/$USERNAME/.bashrc"
 
+# Add custom bash configurations
+RUN cat <<'EOF' >> "/home/$USERNAME/.bashrc"
+for file in "$HOME"/.bashrc.d/*.bashrc; do
+  if [ -f "$file" ]; then
+    source "$file"
+  fi
+done
+EOF
+
 # Health check
 HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
   CMD echo "Container is healthy"

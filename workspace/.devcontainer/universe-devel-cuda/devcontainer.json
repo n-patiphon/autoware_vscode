@@ -37,7 +37,13 @@
     "--volume=${env:HOME}/.config/Lichtblick:/home/autoware/.config/Lichtblick",
     "--volume=${env:HOME}/.ccache:/ccache",
     "--gpus",
-    "all"
+    "all",
+    // Additional configs
+    "--volume=/opt/autoware:/opt/autoware",
+    "--volume=${env:HOME}/.tmux:/home/autoware/.tmux",
+    "--volume=${env:HOME}/.tmux.conf:/home/autoware/.tmux.conf",
+    "--volume=${env:HOME}/.bashrc.d:/home/autoware/.bashrc.d",
+    "--volume=${env:HOME}/.oh-my-bash:/home/autoware/.oh-my-bash"
   ],
   "customizations": {
     "vscode": {
