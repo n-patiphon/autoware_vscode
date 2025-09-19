@@ -26,7 +26,6 @@
   files:
     - source: .github/workflows/pre-commit-ansible.yaml
     - source: .github/workflows/pre-commit-ansible-autoupdate.yaml
-    - source: .pre-commit-config-ansible.yaml
     - source: ansible/roles/artifacts/defaults/main.yaml
     - source: ansible/roles/artifacts/meta/main.yaml
     - source: ansible/roles/artifacts/tasks/main.yaml
