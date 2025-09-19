@@ -39,6 +39,8 @@
     "--gpus",
     "all",
     // Additional configs
+    "--env",
+    "CONAINER_NAME=${localWorkspaceFolderBasename}",
     "--volume=/opt/autoware:/opt/autoware",
     "--volume=${env:HOME}/.tmux:/home/autoware/.tmux",
     "--volume=${env:HOME}/.tmux.conf:/home/autoware/.tmux.conf",
