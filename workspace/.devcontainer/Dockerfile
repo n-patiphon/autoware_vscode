@@ -123,19 +123,6 @@ RUN groupadd --gid "$USER_GID" "$USERNAME" \
   && chmod 700 "$XDG_RUNTIME_DIR" \
   && chown -R "$USERNAME":"$USERNAME" "$XDG_RUNTIME_DIR"
 
-# Install missing dependencies of current workspace
-COPY src/ /tmp/src
-RUN set +e \
-  && echo "Attempting to install workspace dependencies..." \
-  && apt-get update \
-  && rosdep update \
-  && rosdep install --from-paths /tmp/src --ignore-src --rosdistro "$ROS_DISTRO" -yr \
-  && echo "Dependencies installation completed" \
-  || echo "Info: Dependency installation can be skipped if no internet connection. This layer is not critical for container rebuild." \
-  && set -e \
-  && apt-get autoremove -y && apt-get clean -y && rm -rf /var/lib/apt/lists/* "$HOME"/.cache \
-  && rm -rf /tmp/src
-
 # Final user and workspace setup
 USER $USERNAME
 WORKDIR /workspace
