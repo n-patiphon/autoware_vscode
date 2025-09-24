@@ -119,6 +119,9 @@
       "detail": "Install all dependencies specified in the workspaces package.xml files.",
       "type": "shell",
       "command": "sudo apt update && rosdep install --from-paths src --ignore-src -yr || (rosdep update && rosdep install --from-paths src --ignore-src -yr)",
+      "runOptions": {
+        "runOn": "folderOpen"
+      },
       "problemMatcher": []
     },
     {
